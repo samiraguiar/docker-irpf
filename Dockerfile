@@ -12,7 +12,7 @@ RUN apk update \
 RUN addgroup -g ${PGID} irpf && \
     adduser -D -u ${PUID} -G irpf irpf
 
-RUN wget http://downloadirpf.receita.fazenda.gov.br/irpf/2020/irpf/arquivos/IRPF2020-1.2.zip -O irpf2020.zip \
+RUN wget http://downloadirpf.receita.fazenda.gov.br/irpf/2020/irpf/arquivos/IRPF2020-1.8.zip -O irpf2020.zip \
  && unzip irpf2020.zip -d /opt/ \
  && rm -f irpf2020.zip
 
