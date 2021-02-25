@@ -10,6 +10,8 @@ ENV USER="irpf"
 ENV IRPF_DEPENDENCIES="sudo libxtst6 libxrender1 libfontconfig1 libxi6"
 # deps for the perl module used to extract files from the installer
 ENV EXTRACT_PL_DEPENDENCIES="libmodern-perl-perl libcompress-raw-lzma-perl libterm-progressbar-perl libdata-dump-perl libfile-homedir-perl"
+# enable anti-aliasing for Swing applications
+ENV _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on"
 
 RUN apt update \
  && apt-get install -y ${IRPF_DEPENDENCIES} \
