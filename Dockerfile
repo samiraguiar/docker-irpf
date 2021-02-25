@@ -2,6 +2,7 @@
 FROM phusion/baseimage:master
 
 ARG INSTALLER_URL="https://downloadirpf.receita.fazenda.gov.br/irpf/2021/irpf/arquivos/IRPF2021Linux-x86_64v1.0.bin"
+ARG DIR_NAME="IRPF2021"
 ARG PUID=1000
 ARG PGID=1000
 
@@ -23,15 +24,21 @@ RUN groupadd ${USER} -g ${PGID} \
 # set the password for debugging purposes
 RUN echo "${USER}:${USER}" | chpasswd
 
-USER ${USER}
-WORKDIR /home/${USER}
-
 # Download and install the IRPF installer.
 # Starting from version 2021, the Java runtime comes bundled inside the installer (but not the zip).
 # However, running the installer doesn't seem to work on docker, so we use a 3rd-party tool to extract it.
-RUN curl -o irpf.bin "${INSTALLER_URL}" \
- && chmod +x irpf.bin \
- && perl /tmp/extract.pl --quiet --prefix / irpf.bin
+ENV PREFIX="/opt"
+# download in a separate command for better caching
+RUN cd ${PREFIX}  \
+ && curl -o irpf.bin "${INSTALLER_URL}" \
+ && chmod +x irpf.bin
 
-WORKDIR /home/${USER}/ProgramasRFB/IRPF2021
+ENV IRPF_DIR="${PREFIX}/home/${USER}/ProgramasRFB/${DIR_NAME}"
+# install to /opt to avoid polluting a possibly mounted home dir
+RUN perl /tmp/extract.pl --quiet --prefix ${PREFIX} ${PREFIX}/irpf.bin \
+ && chown -R ${PUID}:${PGID} ${IRPF_DIR} \
+ && rm -f ${PREFIX}/irpf.bin /tmp/extract.pl
+
+USER ${USER}
+WORKDIR ${IRPF_DIR}
 CMD ["bash", "exec.sh"]
