@@ -1,7 +1,7 @@
 # this image is small enough and more powerfull than alpine
 FROM phusion/baseimage:master
 
-ARG INSTALLER_URL="https://downloadirpf.receita.fazenda.gov.br/irpf/2021/irpf/arquivos/IRPF2021Linux-x86_64v1.0.bin"
+ARG INSTALLER_URL="https://downloadirpf.receita.fazenda.gov.br/irpf/2021/irpf/arquivos/IRPF2021Linux-x86_64v1.1.bin"
 ARG DIR_NAME="IRPF2021"
 ARG PUID=1000
 ARG PGID=1000
